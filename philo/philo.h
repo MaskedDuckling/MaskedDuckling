@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eydupray <eydupray@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maskedduck <maskedduck@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 15:22:34 by eydupray          #+#    #+#             */
-/*   Updated: 2021/11/29 16:57:07 by eydupray         ###   ########.fr       */
+/*   Updated: 2021/12/03 23:47:54 by maskedduck       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@
 # include <pthread.h>
 # include <stdlib.h>
 
-typedef struct	s_state
+typedef struct	s_glob
 {
 	int nphilo;
 	int tdeath;
 	int teat;
 	int tsleep;
 	int neat;
-}               t_state;
+}               t_glob;
 
 typedef struct	s_philo
 {
