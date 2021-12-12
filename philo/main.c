@@ -6,7 +6,7 @@
 /*   By: maskedduck <maskedduck@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 15:20:54 by eydupray          #+#    #+#             */
-/*   Updated: 2021/12/03 23:53:54 by maskedduck       ###   ########.fr       */
+/*   Updated: 2021/12/07 23:51:02 by maskedduck       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,19 @@ void	ft_init(char **av, t_glob *glob)
 		glob->neat = 0;
 }
 
-t_philo *ft_init_philo(t_glob *glob)
+void	mutex_init(t_glob *glob)
+{
+	int i;
+
+	i = 0;
+	glob->forks = malloc(sizeof(pthread_mutex_t) * glob->nphilo);
+	while (i < glob->nphilo)
+	{
+		pthread_mutex_init(&glob->forks[i], 0);
+	}
+}
+
+void	ft_init_philo(t_glob *glob)
 {
 	t_philo *philo;
 	int i;
@@ -36,11 +48,57 @@ t_philo *ft_init_philo(t_glob *glob)
 		exit_and_free();
 	while (i < glob->nphilo)
 	{
-		philo[i].state = 0;
+		philo[i].position = i;
 		philo[i].tdeath = glob->tdeath;
+		philo[i].rfork = &(glob->forks[i]);
+		philo[i].lfork = &(glob->forks[(i + 1) % glob->nphilo]);
+		philo[i].glob = glob;
 		i++;
 	}
-	return (philo);
+	glob->philo = philo;
+}
+
+__uint64_t	get_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((__uint64_t)time.tv_sec * 1000 + ((__uint64_t)time.tv_usec) / 1000);
+}
+
+void	start_routine(t_philo *philo)
+{
+	__uint64_t lmeal;
+	
+	lmeal = get_time();
+	while (1)
+	{
+		if ()
+		pthread_mutex_lock(philo->lfork);
+		pthread_mutex_lock(philo->rfork);
+		if (philo->tdeath > get_time() - lmeal)
+			break;
+		lmeal = get_time();
+		usleep(philo->glob->teat * 1000);
+		pthread_mutex_unlock(philo->lfork);
+		pthread_mutex_unlock(philo->rfork);
+		usleep(philo->glob->tsleep * 1000);
+	}
+	pthread_mutex_unlock(philo->lfork);
+	pthread_mutex_unlock(philo->rfork);
+
+}
+
+void	start_thread(t_glob *glob)
+{
+	int i;
+	pthread_t tid;
+
+	i = 0;
+	while (i < glob->nphilo)
+	{
+		pthread_create(tid, 0, start_routine, &glob->philo);
+	}
 }
 
 int main(int ac, char **av)
@@ -52,8 +110,6 @@ int main(int ac, char **av)
 	if (ac < 5 || ac > 6)
 		return (0);
 	ft_init(av, &glob);
-	philo = ft_init_philo(&glob);
-	int i = 0;
-	while (i < glob.nphilo)
-		printf("%d",philo[i++].state);
+	mutex_init(&glob);
+	ft_init_philo(&glob);
 }

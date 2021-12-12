@@ -6,7 +6,7 @@
 /*   By: maskedduck <maskedduck@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 15:22:34 by eydupray          #+#    #+#             */
-/*   Updated: 2021/12/03 23:47:54 by maskedduck       ###   ########.fr       */
+/*   Updated: 2021/12/07 23:51:33 by maskedduck       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <stdlib.h>
+# include <sys/time.h>
 
 typedef struct	s_glob
 {
@@ -25,14 +26,18 @@ typedef struct	s_glob
 	int teat;
 	int tsleep;
 	int neat;
+	t_philo *philo;
+	pthread_mutex_t *forks;
 }               t_glob;
 
 typedef struct	s_philo
 {
-	int state;
-	int rfork;
-	int lfork;
+	int position;
+	pthread_mutex_t *rfork;
+	pthread_mutex_t *lfork;
 	int tdeath;
+	t_glob *glob;
+	int deadrunning;
 }				t_philo;
 
 /*Utils*/
